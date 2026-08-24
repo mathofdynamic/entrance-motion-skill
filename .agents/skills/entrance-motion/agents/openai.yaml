@@ -1,0 +1,4 @@
+interface:
+  display_name: "Entrance Motion"
+  short_description: "Implement calm, reduced-motion-safe frontend entrance reveals"
+  default_prompt: "Use $entrance-motion to add or audit quiet, progressive page entrance motion in this project."
