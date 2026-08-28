@@ -18,6 +18,7 @@ This repository ships instructions, not a runtime library. It does not add a fra
 | Section trigger | `IntersectionObserver` or the project equivalent |
 | Replay behavior | One reveal per section; revealed items stay static |
 | Reduced motion | Immediate reveal without translation or stagger |
+| Surface close | `66ms`, compact `8px` exit, no close stagger |
 
 The timing is intentionally fast. The skill requires visual inspection because a successful build does not prove that motion is perceivable, stable, or accessible.
 
@@ -31,6 +32,7 @@ skills/entrance-motion/                Canonical portable skill package
 .agents/skills/entrance-motion/        Codex repository integration
 .claude/skills/entrance-motion/        Claude Code repository integration
 scripts/verify_skill_copies.py         Parity check for the integrations
+examples/glasses-shop/                 Three-page before/after comparison fixture
 ```
 
 The three `SKILL.md` files are deliberately kept identical. The canonical copy is under `skills/entrance-motion`; the `.agents` and `.claude` copies make a cloned repository discoverable by each host without requiring a custom installer.
@@ -79,6 +81,23 @@ Invoke the skill when adding or repairing page or section entrance reveals in an
 
 Do not use this skill for loading screens, parallax, continuous decorative motion, or a full animation-system rewrite. Those are different design and engineering problems.
 
+## Comparison fixture
+
+[`examples/glasses-shop`](examples/glasses-shop) is a self-contained three-page Glasses Shop example for reviewing the contract before applying it to a real product. The `before` and `after` directories share the same HTML and CSS. Only the JavaScript motion layer differs.
+
+```bash
+cd examples/glasses-shop
+python -m http.server 4173
+```
+
+Open [`before/`](http://localhost:4173/before/) and [`after/`](http://localhost:4173/after/) in separate tabs. Test the home, collection, and point-of-view pages, then open Search, Bag, Menu, and a product dialog. The after fixture also covers Escape, outside-click, focus return, reduced motion, collection filters, newsletter feedback, and reopening a surface while its close transition is still running.
+
+Verify that the design remains identical:
+
+```bash
+python scripts/verify_glasses_shop_parity.py
+```
+
 ## Validation
 
 Run the repository parity check from the project root:
@@ -96,4 +115,3 @@ MIT. See [`LICENSE`](LICENSE).
 ## Source brief
 
 The original long-form brief is available in [`ENTRANCE_MOTION_PROMPT.md`](ENTRANCE_MOTION_PROMPT.md). The installable skill is intentionally more compact so agents load the workflow without carrying a second copy of the same instructions.
-

@@ -77,9 +77,32 @@ Once a section has been triggered:
 - Never replay its animation.
 - Keep all revealed items visible and static when the user scrolls away and returns.
 
+## Menus, popups, and transient surfaces
+
+Apply the same entrance treatment to every user-visible transient surface, including navigation menus, dropdowns, popovers, command palettes, drawers, filter sheets, disclosure panels, dialogs, and modals.
+
+When a menu or popup opens:
+
+- Use the same `100ms` duration, easing, opacity, and transform contract as page entrance motion.
+- Animate the surface shell and its meaningful rows or actions in deterministic DOM order.
+- If a backdrop exists, animate its opacity only. Do not translate the backdrop.
+- Mount the surface and start its opening state only after its layout is stable.
+
+When a menu or popup closes:
+
+- Use a faster, more compact exit: `66ms` duration, `cubic-bezier(.4, 0, 1, 1)`, and `translate3d(0, 8px, 0)`.
+- Use opacity and transform only.
+- Close the shell and contents together. Do not reverse the full opening stagger.
+- Keep the surface mounted until the transition completes, then remove it or restore its closed state.
+- Use `transitionend` with a bounded fallback timer.
+- Synchronize `aria-expanded`, `aria-hidden`, `inert`, pointer interaction, and focus return.
+- If the user reopens it during closing, cancel the pending close and begin a clean opening transition.
+
+Do not leave an invisible overlay mounted, delay keyboard access, trap focus incorrectly, or use motion to hide content.
+
 ## Page coverage
 
-Apply the same motion system consistently to:
+Initialize the motion system at the shared route or layout boundary and apply it consistently to every relevant page and shared shell:
 
 - Homepage sections
 - Document lists
@@ -236,5 +259,7 @@ After implementation:
 12. Confirm no horizontal overflow.
 13. Confirm no console errors.
 14. Confirm content remains usable if JavaScript fails.
+15. Open every representative menu and popup, then verify its entrance motion.
+16. Close each surface through its close control, Escape, outside click, and relevant navigation path. Verify the exit is faster and compact, focus returns correctly, and reopening during close does not leave a stuck surface.
 
 Do not claim the motion is complete until the actual rendered pages have been inspected.

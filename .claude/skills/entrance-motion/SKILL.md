@@ -1,11 +1,11 @@
 ---
 name: entrance-motion
-description: Implement or audit calm, progressive frontend entrance motion across pages and sections with stable initialization, deterministic stagger, reduced-motion support, and rendered-page validation. Use when adding or repairing page or section reveals; do not use for loading screens, parallax, continuous decorative motion, or a full animation-system replacement.
+description: Implement or audit calm, progressive frontend entrance motion across pages, menus, popovers, dialogs, and other transient surfaces with stable initialization, deterministic stagger, reduced-motion support, faster close transitions, and rendered-page validation. Use when adding or repairing entrance or exit reveals; do not use for loading screens, parallax, continuous decorative motion, or a full animation-system replacement.
 ---
 
 # Entrance Motion
 
-Use this skill to add or repair a shared entrance-motion system in an existing frontend. Preserve the project’s architecture and existing motion primitives where they are sound. Do not create competing animation systems for individual pages.
+Use this skill to add or repair one shared entrance-motion system in an existing frontend. Preserve the project’s architecture and existing motion primitives where they are sound. Wire the same system into page composition and shared transient-surface primitives. Do not create competing animation systems for individual pages, menus, or popups.
 
 ## Boundaries
 
@@ -68,7 +68,46 @@ Use `IntersectionObserver` or the project’s equivalent so below-the-fold secti
 
 Do not animate an entire section as one simultaneous block. A section is a trigger boundary; its meaningful children use the shared cadence.
 
-## 5. Respect reduced motion and accessibility
+## 5. Cover every page and shared shell
+
+Install the motion entrypoint at the shared route or layout boundary so every relevant page receives the same initialization and visibility queue. Verify at least the homepage, representative inner pages, long pages, lists or grids, search results, empty states, and error states when they exist. Include the shared navigation and content groups that users can open from those pages.
+
+Do not create route-specific copies of the motion system. Keep page coverage in the shared primitive and use explicit markers or opt-outs for meaningful visual units that need different treatment.
+
+## 6. Animate menus, popups, and transient surfaces
+
+Treat every user-visible transient surface as a motion boundary, including navigation menus, dropdowns, popovers, command palettes, drawers, filter sheets, disclosure panels, dialogs, and modals. Integrate at the shared surface primitive so every instance receives the same behavior.
+
+### Opening
+
+- Use the same opening duration, easing, opacity, and transform contract as page entrance motion.
+- Animate the surface shell and its meaningful rows or actions in DOM order. Do not add nested animations to every label or icon.
+- If a backdrop exists, animate its opacity only. Do not translate the backdrop with the panel.
+- Apply the opening state after the surface is mounted and its layout is stable. Do not delay opening for optional resources.
+
+### Closing
+
+Closing should be visibly faster and more compact than opening because it clears the user’s way. Centralize these defaults:
+
+| Token | Default |
+| --- | --- |
+| Close duration | `66ms` |
+| Close easing | `cubic-bezier(.4, 0, 1, 1)` |
+| Close transform | `translate3d(0, 8px, 0)` |
+| Close stagger | none |
+
+Use opacity and transform only. Close the shell and its contents together, without waiting for a reverse item-by-item sequence. Keep the surface mounted until the close transition finishes, then remove it or restore its normal closed state. Use `transitionend` with a bounded fallback timer so a missing event cannot leave an invisible overlay mounted.
+
+Synchronize the interaction state with the visual state:
+
+- Update `aria-expanded`, `aria-hidden`, `inert`, and pointer interaction according to the project’s accessibility model.
+- Return focus to the invoking control when a menu or popup closes, including Escape, outside-click, and close-button paths.
+- If the user reopens a surface while it is closing, cancel the pending close, clear stale timers, and start a clean opening transition.
+- Preserve normal closed-state semantics. A controlled menu or dialog may be non-rendered while closed, but do not use `display: none` to stage an already-visible page or to interrupt an active close transition.
+
+Do not let menu or popup motion delay keyboard access, trap focus incorrectly, change reading order, or leave a backdrop intercepting input after close.
+
+## 7. Respect reduced motion and accessibility
 
 Implement and test `prefers-reduced-motion: reduce`.
 
@@ -79,7 +118,7 @@ Implement and test `prefers-reduced-motion: reduce`.
 - Do not delay access to interactive controls or use motion to hide important information.
 - If the preference changes during a session, reconcile pending and future items safely.
 
-## 6. Validate the rendered result
+## 8. Validate the rendered result
 
 Run the project’s relevant checks, then inspect actual rendered pages. Do not claim completion from a build or static source review alone.
 
@@ -94,6 +133,8 @@ At minimum, verify:
 7. No loading screen, artificial blank interval, font/layout flash, horizontal overflow, or layout shift was introduced.
 8. Reduced-motion mode reveals content immediately without translation or stagger.
 9. Content remains available when motion setup is disabled or JavaScript fails.
+10. Every representative menu, popup, dialog, and drawer opens with the shared entrance behavior and closes faster with the compact exit behavior.
+11. Escape, outside click, close controls, focus return, and reopen-during-close work without a stuck overlay or inert page.
 
 If browser inspection, a target route, or a required environment is unavailable, report that boundary explicitly instead of calling the motion production-verified.
 
