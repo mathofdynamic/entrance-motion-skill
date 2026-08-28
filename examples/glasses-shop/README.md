@@ -7,6 +7,8 @@ The `before` and `after` folders use the same pages, styles, content, and contro
 - `before/` reveals pages and transient surfaces immediately.
 - `after/` adds viewport-triggered page reveals, staggered menu and popup entrances, compact close transitions, reduced-motion handling, and lifecycle-safe focus behavior.
 
+The after fixture uses a `200ms` opening duration with a derived `66.667ms` item lead. Its compact exit remains `66ms`, so closing is intentionally faster than opening.
+
 ## Run locally
 
 From this directory:

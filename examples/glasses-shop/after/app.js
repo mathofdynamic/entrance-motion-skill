@@ -7,7 +7,7 @@
   const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
   const pageSections = selectAll("[data-motion-section]");
   const surfaceMeta = new WeakMap();
-  const MOTION_DURATION = 100;
+  const MOTION_DURATION = 200;
   const MOTION_LEAD = MOTION_DURATION / 3;
   const CLOSE_DURATION = 66;
 

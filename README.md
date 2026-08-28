@@ -92,6 +92,8 @@ python -m http.server 4173
 
 Open [`before/`](http://localhost:4173/before/) and [`after/`](http://localhost:4173/after/) in separate tabs. Test the home, collection, and point-of-view pages, then open Search, Bag, Menu, and a product dialog. The after fixture also covers Escape, outside-click, focus return, reduced motion, collection filters, newsletter feedback, and reopening a surface while its close transition is still running.
 
+For easier comparison, the after fixture overrides the default opening timing to `200ms` with a derived `66.667ms` item lead; its compact `66ms` close remains faster.
+
 Verify that the design remains identical:
 
 ```bash
