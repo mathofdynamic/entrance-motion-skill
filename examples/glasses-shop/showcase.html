@@ -1,0 +1,518 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Entrance Motion / Before and After</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --ink: #edf0e8;
+        --muted: #9aa9a1;
+        --line: rgba(237, 240, 232, .18);
+        --pine: #102f2b;
+        --pine-deep: #091c1a;
+        --coral: #ed8565;
+        --sun: #e4c96f;
+      }
+
+      * { box-sizing: border-box; }
+
+      html,
+      body {
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        overflow: hidden;
+        background: var(--pine-deep);
+        color: var(--ink);
+        font-family: "DM Mono", "SFMono-Regular", Consolas, monospace;
+      }
+
+      body {
+        display: grid;
+        grid-template-rows: auto minmax(0, 1fr) auto;
+        padding: 20px 20px 16px;
+        gap: 14px;
+      }
+
+      .showcase-header {
+        display: flex;
+        align-items: end;
+        justify-content: space-between;
+        gap: 32px;
+        min-height: 64px;
+        border-bottom: 1px solid var(--line);
+        padding: 0 4px 14px;
+      }
+
+      .eyebrow,
+      .pane-kicker,
+      .caption-kicker {
+        margin: 0 0 8px;
+        color: var(--sun);
+        font-size: 10px;
+        letter-spacing: .13em;
+        line-height: 1;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        margin: 0;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: clamp(28px, 3vw, 48px);
+        font-weight: 400;
+        letter-spacing: -.06em;
+        line-height: .86;
+      }
+
+      .legend {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: var(--muted);
+        font-size: 10px;
+        letter-spacing: .09em;
+        text-transform: uppercase;
+        white-space: nowrap;
+      }
+
+      .legend strong {
+        display: inline-flex;
+        align-items: center;
+        min-height: 28px;
+        border: 1px solid var(--line);
+        padding: 0 10px;
+        color: var(--ink);
+        font-weight: 400;
+      }
+
+      .legend strong:last-child {
+        border-color: rgba(228, 201, 111, .55);
+        color: var(--sun);
+      }
+
+      .legend-arrow { color: var(--coral); font-size: 16px; }
+
+      .stage {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+        min-height: 0;
+        gap: 12px;
+      }
+
+      .pane {
+        display: grid;
+        grid-template-rows: 34px minmax(0, 1fr);
+        min-width: 0;
+        min-height: 0;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        background: #172f2c;
+      }
+
+      .pane.after { border-color: rgba(228, 201, 111, .48); }
+
+      .pane-label {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 0 12px;
+        background: rgba(9, 28, 26, .9);
+        color: var(--muted);
+        font-size: 10px;
+        letter-spacing: .1em;
+        text-transform: uppercase;
+      }
+
+      .pane.after .pane-label { color: var(--sun); }
+
+      .pane-status { color: inherit; opacity: .75; }
+
+      iframe {
+        display: block;
+        width: 100%;
+        height: 100%;
+        border: 0;
+        background: #f1ede4;
+      }
+
+      .caption {
+        display: grid;
+        grid-template-columns: 150px minmax(0, 1fr) auto;
+        align-items: center;
+        gap: 18px;
+        min-height: 58px;
+        border-top: 1px solid var(--line);
+        padding: 8px 4px 0;
+      }
+
+      .caption-kicker { margin: 0; }
+
+      .caption-main {
+        display: flex;
+        align-items: baseline;
+        gap: 14px;
+        min-width: 0;
+      }
+
+      .caption-title {
+        overflow: hidden;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 22px;
+        font-weight: 400;
+        letter-spacing: -.04em;
+        line-height: 1;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .caption-detail {
+        overflow: hidden;
+        color: var(--muted);
+        font-size: 10px;
+        letter-spacing: .04em;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .caption-progress {
+        color: var(--coral);
+        font-size: 10px;
+        letter-spacing: .1em;
+        text-transform: uppercase;
+        white-space: nowrap;
+      }
+
+      @media (max-width: 900px) {
+        body { padding: 12px; gap: 10px; }
+        .showcase-header { align-items: start; flex-direction: column; gap: 14px; }
+        .legend { align-self: stretch; justify-content: space-between; }
+        .caption { grid-template-columns: 1fr auto; }
+        .caption-main { grid-column: 1 / -1; grid-row: 1; }
+        .caption-kicker { grid-column: 1; grid-row: 2; }
+        .caption-progress { grid-column: 2; grid-row: 2; }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="showcase-header">
+      <div>
+        <p class="eyebrow">Entrance motion / visual comparison</p>
+        <h1>Same design. Different arrival.</h1>
+      </div>
+      <div class="legend" aria-label="Comparison legend">
+        <strong>Before / instant</strong>
+        <span class="legend-arrow">→</span>
+        <strong>After / 200ms</strong>
+      </div>
+    </header>
+
+    <main class="stage" aria-label="Before and after website comparison">
+      <section class="pane before" aria-label="Before website">
+        <div class="pane-label"><span>01 / no motion layer</span><span class="pane-status" id="before-status">loading</span></div>
+        <iframe id="before-frame" title="Glasses Shop before animation" src="before/index.html?showcase=before"></iframe>
+      </section>
+      <section class="pane after" aria-label="After website">
+        <div class="pane-label"><span>02 / entrance-motion skill</span><span class="pane-status" id="after-status">loading</span></div>
+        <iframe id="after-frame" title="Glasses Shop after animation" src="after/index.html?showcase=after"></iframe>
+      </section>
+    </main>
+
+    <aside class="caption" aria-live="polite">
+      <p class="caption-kicker" id="caption-kicker">Loading comparison</p>
+      <div class="caption-main">
+        <strong class="caption-title" id="caption-title">Preparing the same route in both panes</strong>
+        <span class="caption-detail" id="caption-detail">The recording will exercise page, menu, popup, form, filter, and close states.</span>
+      </div>
+      <span class="caption-progress" id="caption-progress">00 / 00</span>
+    </aside>
+
+    <script>
+      (() => {
+        const panes = [
+          { key: "before", frame: document.querySelector("#before-frame"), status: document.querySelector("#before-status") },
+          { key: "after", frame: document.querySelector("#after-frame"), status: document.querySelector("#after-status") },
+        ];
+        const caption = {
+          kicker: document.querySelector("#caption-kicker"),
+          title: document.querySelector("#caption-title"),
+          detail: document.querySelector("#caption-detail"),
+          progress: document.querySelector("#caption-progress"),
+        };
+        const state = { step: 0, total: 0 };
+        const PLAYBACK_SCALE = 1.25;
+
+        const wait = (milliseconds) => new Promise((resolve) => window.setTimeout(resolve, milliseconds * PLAYBACK_SCALE));
+
+        const setCaption = (kicker, title, detail, step = null) => {
+          caption.kicker.textContent = kicker;
+          caption.title.textContent = title;
+          caption.detail.textContent = detail;
+          if (step !== null) state.step = step;
+          caption.progress.textContent = `${String(state.step).padStart(2, "0")} / ${String(state.total).padStart(2, "0")}`;
+        };
+
+        const getDocument = (pane) => pane.frame.contentDocument;
+
+        const waitForLoad = (pane) => {
+          if (pane.frame.contentDocument?.readyState === "complete") return Promise.resolve();
+          return new Promise((resolve) => pane.frame.addEventListener("load", resolve, { once: true }));
+        };
+
+        const navigateBoth = async (page) => {
+          await Promise.all(panes.map((pane) => {
+            const loaded = new Promise((resolve) => pane.frame.addEventListener("load", resolve, { once: true }));
+            const cleanPage = page.replace(/^\//, "");
+            pane.frame.src = `${pane.key}/${cleanPage}?showcase=${pane.key}&run=${Date.now()}`;
+            return loaded;
+          }));
+          await wait(120);
+        };
+
+        const activeSurface = (documentRoot) => [...documentRoot.querySelectorAll("[data-motion-surface]")].find((surface) => {
+          const backdrop = surface.closest("[data-surface-backdrop]");
+          return !surface.hidden && (!backdrop || !backdrop.hidden);
+        });
+
+        const clickBoth = (selector) => {
+          panes.forEach((pane) => {
+            const target = getDocument(pane).querySelector(selector);
+            if (!target) throw new Error(`Showcase target not found: ${selector} in ${pane.key}`);
+            target.click();
+          });
+        };
+
+        const clickLinkBoth = async (selector) => {
+          const loaded = panes.map((pane) => new Promise((resolve) => pane.frame.addEventListener("load", resolve, { once: true })));
+          clickBoth(selector);
+          await Promise.all(loaded);
+          await wait(120);
+        };
+
+        const closeBoth = (mode = "button") => {
+          panes.forEach((pane) => {
+            const root = getDocument(pane);
+            const surface = activeSurface(root);
+            if (!surface) return;
+            if (mode === "escape") {
+              root.dispatchEvent(new root.defaultView.KeyboardEvent("keydown", { key: "Escape", bubbles: true }));
+            } else if (mode === "outside") {
+              root.body.dispatchEvent(new root.defaultView.MouseEvent("click", { bubbles: true }));
+            } else {
+              surface.querySelector("[data-surface-close]")?.click();
+            }
+          });
+        };
+
+        const submitBoth = (selector, fieldSelector, value) => {
+          panes.forEach((pane) => {
+            const root = getDocument(pane);
+            const form = root.querySelector(selector);
+            const field = form?.querySelector(fieldSelector);
+            if (!form || !field) throw new Error(`Showcase form target not found in ${pane.key}`);
+            field.value = value;
+            field.dispatchEvent(new root.defaultView.Event("input", { bubbles: true }));
+            if (typeof form.requestSubmit === "function") form.requestSubmit();
+            else form.dispatchEvent(new root.defaultView.Event("submit", { bubbles: true, cancelable: true }));
+          });
+        };
+
+        const scrollProgress = async (progress, milliseconds = 900) => {
+          const starts = panes.map((pane) => getDocument(pane).defaultView.scrollY);
+          const targets = panes.map((pane) => {
+            const view = getDocument(pane).defaultView;
+            return Math.max(0, getDocument(pane).documentElement.scrollHeight - view.innerHeight) * progress;
+          });
+          const startedAt = performance.now();
+          const duration = milliseconds * PLAYBACK_SCALE;
+          return new Promise((resolve) => {
+            const tick = (now) => {
+              const raw = Math.min(1, (now - startedAt) / duration);
+              const eased = 1 - Math.pow(1 - raw, 3);
+              panes.forEach((pane, index) => getDocument(pane).defaultView.scrollTo(0, starts[index] + (targets[index] - starts[index]) * eased));
+              if (raw < 1) window.requestAnimationFrame(tick);
+              else resolve();
+            };
+            window.requestAnimationFrame(tick);
+          });
+        };
+
+        const scrollToBoth = async (selector, milliseconds = 800) => {
+          const offsets = panes.map((pane) => {
+            const root = getDocument(pane);
+            const target = root.querySelector(selector);
+            if (!target) throw new Error(`Showcase scroll target not found: ${selector} in ${pane.key}`);
+            return Math.max(0, target.getBoundingClientRect().top + root.defaultView.scrollY - root.defaultView.innerHeight * .16);
+          });
+          const starts = panes.map((pane) => getDocument(pane).defaultView.scrollY);
+          const startedAt = performance.now();
+          const duration = milliseconds * PLAYBACK_SCALE;
+          return new Promise((resolve) => {
+            const tick = (now) => {
+              const raw = Math.min(1, (now - startedAt) / duration);
+              const eased = 1 - Math.pow(1 - raw, 3);
+              panes.forEach((pane, index) => getDocument(pane).defaultView.scrollTo(0, starts[index] + (offsets[index] - starts[index]) * eased));
+              if (raw < 1) window.requestAnimationFrame(tick);
+              else resolve();
+            };
+            window.requestAnimationFrame(tick);
+          });
+        };
+
+        const setStatuses = () => {
+          panes[0].status.textContent = "instant";
+          panes[1].status.textContent = "200ms / 66ms close";
+        };
+
+        const waitUntilClosed = async () => {
+          await wait(260);
+          panes.forEach((pane) => {
+            const surface = getDocument(pane).querySelector("#site-menu, #search-panel, #bag-panel, #product-backdrop");
+            if (surface && !surface.hidden) return;
+          });
+        };
+
+        const playRecording = async () => {
+          state.total = 14;
+          setCaption("01 / page entrance", "Home route: instant versus progressive", "Same content and layout. After reveals meaningful groups in DOM order, then leaves them static.", 1);
+          await navigateBoth("index.html");
+          await wait(1500);
+
+          setCaption("02 / shared surface", "Menu entrance, side by side", "The same menu opens in both panes; the After panel and navigation rows arrive with the shared motion contract.", 2);
+          clickBoth('[data-surface-open="site-menu"]');
+          await wait(650);
+          setCaption("02 / compact exit", "Close is faster and shorter", "Both menus close from the same control. The After exit is shorter and more compact than its opening.", 2);
+          closeBoth("button");
+          await wait(250);
+          setCaption("02 / interrupt", "Reopen while closing", "A second open cancels stale close state instead of leaving an invisible overlay behind.", 2);
+          clickBoth('[data-surface-open="site-menu"]');
+          await wait(520);
+          closeBoth("outside");
+          await wait(300);
+
+          setCaption("03 / search", "Search is a transient surface too", "Opening, focus, submit feedback, and Escape close are exercised in both panes.", 3);
+          clickBoth('[data-surface-open="search-panel"]');
+          await wait(520);
+          submitBoth("[data-search-form]", "input[name=q]", "Aster");
+          await wait(480);
+          closeBoth("escape");
+          await wait(260);
+
+          setCaption("04 / synchronized scroll", "Sections reveal as they enter the viewport", "Scroll is synchronized. The After pane queues the next meaningful section instead of animating the entire page at once.", 4);
+          await scrollToBoth("[data-product-open='aster']", 1500);
+          await wait(450);
+          setCaption("04 / product dialog", "Aster opens as a popup", "The same product data and controls are present. After adds the entrance and compact exit.", 4);
+          clickBoth("[data-product-open='aster']");
+          await wait(520);
+          closeBoth("button");
+          await wait(260);
+          setCaption("04 / bag handoff", "Sol moves from dialog into the bag", "This tests the dialog close, bag open, focus handoff, and shared transient-surface lifecycle.", 4);
+          clickBoth("[data-product-open='sol']");
+          await wait(520);
+          clickBoth("[data-add-to-bag]");
+          await wait(700);
+          closeBoth("button");
+          await wait(260);
+          setCaption("04 / third popup", "Moss uses the same popup contract", "Repeated instances stay consistent instead of accumulating page-specific motion logic.", 4);
+          clickBoth("[data-product-open='moss']");
+          await wait(520);
+          closeBoth("outside");
+          await wait(260);
+
+          setCaption("05 / footer reveal", "The long page keeps its rhythm", "Lower sections stay available without a loading gap. The same footer form is ready in both panes.", 5);
+          await scrollToBoth(".newsletter", 1500);
+          await wait(420);
+          submitBoth("[data-newsletter-form]", "input[type=email]", "studio@example.com");
+          await wait(520);
+
+          setCaption("06 / route change", "Collection route, same design system", "This is the real shared navigation link in both pages, followed by the same synchronized scroll.", 6);
+          await clickLinkBoth('a.header-link[href="collection.html"]');
+          await wait(1250);
+
+          setCaption("07 / collection controls", "Filters stay functional in both versions", "All, Optical, and Sun update the same grid and count; motion does not change interaction semantics.", 7);
+          clickBoth('[data-filter="optical"]');
+          await wait(400);
+          clickBoth('[data-filter="sun"]');
+          await wait(400);
+          clickBoth('[data-filter="all"]');
+          await wait(520);
+
+          setCaption("08 / product dialogs", "Every collection frame uses the same surface", "Six product popups are opened and closed with button, outside-click, and Escape paths.", 8);
+          await scrollToBoth("[data-product-open='aster']", 1350);
+          await wait(360);
+          const products = ["aster", "sol", "moss", "cinder", "north", "tide"];
+          const closeModes = ["button", "outside", "escape", "button", "outside", "escape"];
+          for (let index = 0; index < products.length; index += 1) {
+            const id = products[index];
+            setCaption("08 / product dialogs", `${index + 1} of ${products.length}: ${id}`, "Each frame opens the same popup surface. The After pane applies the shared entrance and compact close.", 8);
+            clickBoth(`[data-product-open="${id}"]`);
+            await wait(500);
+            closeBoth(closeModes[index]);
+            await wait(250);
+          }
+
+          setCaption("09 / collection scroll", "Below-the-fold content reveals on demand", "The quote section and footer are reached by the same continuous scroll in both panes.", 9);
+          await scrollToBoth(".quote-block", 1250);
+          await wait(380);
+          await scrollToBoth(".newsletter", 1400);
+          await wait(420);
+
+          setCaption("10 / route change", "Point of view route, same shell", "The shared header link takes both panes to the third page in the fixture.", 10);
+          await clickLinkBoth('a.header-link[href="story.html"]');
+          await wait(1250);
+
+          setCaption("11 / shared shell", "The same menu works on the inner page", "Page coverage does not fork the motion system: the story route uses the same menu, search, and close lifecycle.", 11);
+          clickBoth('[data-surface-open="site-menu"]');
+          await wait(560);
+          closeBoth("escape");
+          await wait(250);
+          clickBoth('[data-surface-open="search-panel"]');
+          await wait(520);
+          closeBoth("button");
+          await wait(260);
+
+          setCaption("12 / story scroll", "The narrative page keeps the same pacing", "Progressive sections reveal in sequence while the Before pane stays immediate.", 12);
+          await scrollProgress(.22, 1600);
+          await wait(360);
+          setCaption("12 / story scroll", "A quote becomes the next visual beat", "Below-the-fold content waits until it approaches the viewport in the After pane.", 12);
+          await scrollProgress(.48, 1600);
+          await wait(360);
+          setCaption("12 / story scroll", "Process cards reveal in sequence", "The Before pane is already present; the After pane makes the arrival legible.", 12);
+          await scrollProgress(.74, 1700);
+          await wait(360);
+          setCaption("12 / story scroll", "End state stays stable", "Revisiting revealed content does not replay the entrance.", 12);
+          await scrollProgress(1, 1800);
+          await wait(420);
+
+          setCaption("13 / final control", "The shared form behavior is unchanged", "A final submit confirms that the comparison is motion-only: same content, same controls, different arrival.", 13);
+          submitBoth("[data-newsletter-form]", "input[type=email]", "story@example.com");
+          await wait(620);
+          setCaption("14 / complete", "Motion is the difference", "Before: immediate. After: progressive page and surface entrances, compact exits, reduced-motion-safe implementation.", 14);
+          await wait(1400);
+          return {completed: true, route: panes.map((pane) => getDocument(pane).defaultView.location.pathname)};
+        };
+
+        window.showcase = {
+          wait,
+          setCaption,
+          navigateBoth,
+          clickBoth,
+          clickLinkBoth,
+          closeBoth,
+          submitBoth,
+          scrollProgress,
+          scrollToBoth,
+          waitUntilClosed,
+          playRecording,
+          setStatuses,
+          waitForFrames: () => Promise.all(panes.map(waitForLoad)),
+          state,
+        };
+
+        Promise.all(panes.map(waitForLoad)).then(setStatuses);
+      })();
+    </script>
+  </body>
+</html>

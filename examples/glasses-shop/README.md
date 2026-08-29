@@ -21,6 +21,7 @@ Open:
 
 - `http://localhost:4173/before/`
 - `http://localhost:4173/after/`
+- `http://localhost:4173/showcase.html` for the recorded side-by-side comparison.
 
 Use the same interactions in both versions:
 
@@ -43,3 +44,15 @@ python scripts/verify_glasses_shop_parity.py
 The check confirms that HTML and CSS are identical between the two fixtures. It also confirms that the only JavaScript difference is the expected motion-enabled implementation.
 
 The product images use remote Unsplash URLs so the fixture stays small. A network connection is required to display the photography; layout and interaction testing still work without it.
+
+The showcase is a presentation harness, not a third implementation. It loads the exact before and after pages in separate same-origin panes so scrolling and interactions can be compared at the same moment.
+
+## Record a high-quality showcase
+
+The checked-in recorder uses a clean Chrome session, a `1920x1080` viewport, high-quality browser frames, continuous 1.25x observation-paced playback, and a 30 fps H.264 encode:
+
+```bash
+node ../../scripts/record_glasses_shop_showcase.mjs
+```
+
+It requires Google Chrome and `ffmpeg`. The output is written to `showcase-before-after.mp4` in this directory.

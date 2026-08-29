@@ -11,3 +11,4 @@ coverage/
 __pycache__/
 *.py[cod]
 .pytest_cache/
+examples/glasses-shop/showcase-before-after.mp4
